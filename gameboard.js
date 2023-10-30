@@ -1,51 +1,93 @@
-function cellObject(x,y,hasShip){
-  return{
-    x,
-    y,
-    hasShip
-  }
-}
-
-class Gameboard{
-  constructor(size){
-    this.size = size
+class Gameboard {
+  constructor(size) {
+    this.size = size;
+    this.board = this.createGameboard();
+    this.missedShots = []
   }
 
-  createGameboard(){
-
-    // const gameboardDOM = document.querySelector('.gameboard')
-    const gameboardCellArray = []
-    for(let y = 1; y<=this.size;y++){
-      for(let x = 1; x<=this.size;x++){
-
-        gameboardCellArray.push(cellObject(x,y,false))
-
+  createGameboard() {
+    const gameboardCellArray = [];
+    for (let i = 0; i < this.size; i++) {
+      const row = [];
+      for (let j = 0; j < this.size; j++) {
+        row.push(false);
       }
-      // const cell = createElement('div');
-      // cell.className = 'cell'
-      // gameboardDOM.appendChild(cell)
+      gameboardCellArray.push(row);
+    }
+    return gameboardCellArray;
+  }
+
+  isPlacement(x,y,length,isVertical){
+
+    if(isVertical){
+      if(y+length > this.size){
+        return false
+      }else{
+        return true
+      }
+    }else{
+      // horizontal
+      if(x+length > this.size){
+        return false
+      }else{
+        return true
+      }
+    }
+  }
+
+  placeShipHead(x, y, ship,isVertical) {
+    // Logic to place a ship's head on the game board
+    // You'd need to consider the ship's length, orientation, and validity of the placement
+    // Here, you might modify the gameboardCellArray to represent the ship's presence.
+
+    if(this.isPlacement(x,y,ship.length,isVertical) == false){
+      return false
+    }
       
 
+    if(isVertical == true){
+      for(let i = 0;i<ship.length;i++){
+        this.board[x][y+i] = ship
+      }
+
+    }else{
+      for(let i = 0;i<ship.length;i++){
+        this.board[x+i][y] = ship
+      }
     }
-    return gameboardCellArray
+    
+
   }
 
+  receiveAttack(x, y) {
+    // Check if the attack hits a ship or not
+    
+    if (this.board[x][y] === false) {
+      //  records the coordinates of the missed shot.
+      
+      const missedCoordinates = {
+        x: x,
+        y: y,
+      }
 
-
-  placeShipHead(x,y,ship,facing='west'){
-
-
-
-    if(facing == 'west'){
-      // check if placement possible
-      // then  ...
-      // should only return coordinates of ship for now <---END GOAL
+      this.missedShots.push(missedCoordinates)
+      return 'Miss!';
+    } else {
+      // sends the ‘hit’ function to the correct ship,
+        return 'Hit!!'
     }
   }
-  
+
+  printBoard(){
+    for (let i = 0; i < this.size; i++) {
+      console.log('\n')
+      for (let j = 0; j < this.size; j++) {
+        console.log(this.board[i][j]) 
+      }
+    }
+  }
 }
 
-const g = new Gameboard(8)
-g.createGameboard()
+// Example usage
 
-module.exports = Gameboard
+module.exports = Gameboard;
