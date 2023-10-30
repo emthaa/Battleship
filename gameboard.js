@@ -65,6 +65,8 @@ class Gameboard {
     if (this.board[x][y] === false) {
       //  records the coordinates of the missed shot.
       
+      this.board[x][y] = true
+
       const missedCoordinates = {
         x: x,
         y: y,
@@ -74,18 +76,15 @@ class Gameboard {
       return 'Miss!';
     } else {
       // sends the ‘hit’ function to the correct ship,
+
+        this.board[x][y].hit()
+        this.board[x][y] = true
+
         return 'Hit!!'
     }
   }
 
-  printBoard(){
-    for (let i = 0; i < this.size; i++) {
-      console.log('\n')
-      for (let j = 0; j < this.size; j++) {
-        console.log(this.board[i][j]) 
-      }
-    }
-  }
+ 
 }
 
 // Example usage
