@@ -1,4 +1,4 @@
-class Gameboard {
+export default class Gameboard {
   constructor(size) {
     this.size = size;
     this.board = this.createGameboard();
@@ -45,8 +45,6 @@ class Gameboard {
   
   placeShipHead(x, y, ship,isVertical) {
     // Logic to place a ship's head on the game board
-    // You'd need to consider the ship's length, orientation, and validity of the placement
-    // Here, you might modify the gameboardCellArray to represent the ship's presence.
 
     if(this.isPlacement(x,y,ship.length,isVertical) == false){
       return false
@@ -74,7 +72,7 @@ class Gameboard {
     if (this.board[x][y] === false) {
       //  records the coordinates of the missed shot.
       
-      this.board[x][y] = true
+      this.board[x][y] = 'missed'
 
       const squareCoordinates = {
         x: x,
@@ -87,7 +85,7 @@ class Gameboard {
       // sends the ‘hit’ function to the correct ship,
 
         this.board[x][y].hit()
-        this.board[x][y] = true
+        this.board[x][y] = 'hit'
         const squareCoordinates = {
           x: x,
           y: y,
@@ -121,15 +119,35 @@ class Gameboard {
 
   }
 
-  printBoard(){
-    for (let i = 0; i < this.size; i++) {
-      console.log('\n')
-      for (let j = 0; j < this.size; j++) {
-        console.log(this.board[i][j]) 
+  clearDOMboard(board){
+    while (board.firstChild) {
+      board.removeChild(board.firstChild);
+    }
+  }
+
+  loadDOMboard(container){
+    for(let y = 0; y < this.size; y++){
+      for(let x = 0; x < this.size; x++){
+        // load different pictures depending on the status of the cell
+        const cell = document.createElement('div');
+        container.appendChild(cell);
+        
+        if(this.board[x][y] === 'missed'){
+          cell.className = 'cell-missed';
+        } else if(this.board[x][y] === 'hit'){
+          cell.className = 'cell-hit';
+        } else {
+          cell.className = 'cell';
+        }
+        console.log(cell);
       }
     }
   }
+
+  cellAction(){
+    
+    this.receiveAttack()
+  }
+  
 }
 
-
-module.exports = Gameboard;

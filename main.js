@@ -1,23 +1,24 @@
+import Ship from './ship.js'
+import Gameboard from './gameboard.js'
+
+
 // main game loop
 
-const ship = require('./ship')
-const gameboard = require('./gameboard')
-const player = require('./player')
 
-const playerBoard = new gameboard(10)
-const computerBoard = new gameboard(10)
+const playerBoard = new Gameboard(10)
+const computerBoard = new Gameboard(10)
 
-const playerShipOne = new ship(5)
-const playerShipTwo = new ship(4)
-const playerShipThree = new ship(3)
-const playerShipFour = new ship(3)
-const playerShipFive = new ship(2)
+const playerShipOne = new Ship(5)
+const playerShipTwo = new Ship(4)
+const playerShipThree = new Ship(3)
+const playerShipFour = new Ship(3)
+const playerShipFive = new Ship(2)
 
-const computerShipOne = new ship(5)
-const computerShipTwo = new ship(4)
-const computerShipThree = new ship(3)
-const computerShipFour = new ship(3)
-const computerShipFive = new ship(2)
+const computerShipOne = new Ship(5)
+const computerShipTwo = new Ship(4)
+const computerShipThree = new Ship(3)
+const computerShipFour = new Ship(3)
+const computerShipFive = new Ship(2)
 
 playerBoard.placeShipHead(0,0,playerShipOne,true)
 playerBoard.placeShipHead(1,0,playerShipTwo,true)
@@ -33,8 +34,14 @@ computerBoard.placeShipHead(9,0,computerShipFive,true)
 
 let isGameOver = false
 
-while (isGameOver == false){
+playerBoard.loadDOMboard(document.querySelector('#friendly-gameboard'))
+computerBoard.loadDOMboard(document.querySelector('#enemy-gameboard'))
 
-    
+// create DOM board based off info from gameboard
 
-}
+// while (isGameOver == false){
+
+
+
+
+// }

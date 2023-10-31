@@ -4,18 +4,46 @@ html,body{
   background-color: rgb(49, 49, 49);
 }
 
-.cell{
-  border: 1px solid black;
-  background-color: white;
-  height: 20px;
-  width: 20px;
+:root{
+  --cell-size: 50px;
+}
+
+.boards{
+  margin-top: 15px;
+  display: flex;
+  justify-content:space-evenly ;
 }
 
 .gameboard{
   display: grid;
-  height: 500px;
-  width: 500px;
-  /*grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr)); */
-
+  /* Defining a 10x10 grid with equal columns and rows */
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  width: min-content;
 }
+
+.cell{
+  border: 1px solid black;
+  background-color: white;
+  height: var(--cell-size);
+  width: var(--cell-size);
+}
+
+#enemy-gameboard > .cell:hover{
+  background-color: rgb(163, 163, 163);
+}
+
+.cell-hit{
+  border: 1px solid black;
+  background-color: red;
+  height: var(--cell-size);
+  width: var(--cell-size);
+}
+
+.cell-missed{
+  border: 1px solid black;
+  background-color: green;
+  height: var(--cell-size);
+  width: var(--cell-size);
+}
+
