@@ -1,3 +1,4 @@
+
 export default class Gameboard {
   constructor(size) {
     this.size = size;
@@ -27,6 +28,11 @@ export default class Gameboard {
         if (x >= this.size || y + i >= this.size || this.board[x][y + i] !== false) {
           return false; // Check for overlap or out-of-bounds vertically
         }
+  
+        // Check neighboring squares for ships
+        if ((x > 0 && this.board[x - 1][y + i]) || (x < this.size - 1 && this.board[x + 1][y + i])) {
+          return false; // Check left and right neighboring squares
+        }
       }
       return true;
     } else {
@@ -38,10 +44,16 @@ export default class Gameboard {
         if (x + i >= this.size || y >= this.size || this.board[x + i][y] !== false) {
           return false; // Check for overlap or out-of-bounds horizontally
         }
+  
+        // Check neighboring squares for ships
+        if ((y > 0 && this.board[x + i][y - 1]) || (y < this.size - 1 && this.board[x + i][y + 1])) {
+          return false; // Check upper and lower neighboring squares
+        }
       }
       return true;
     }
   }
+  
   
   placeShipHead(x, y, ship,isVertical) {
     // Logic to place a ship's head on the game board
@@ -96,28 +108,43 @@ export default class Gameboard {
     }
   }
 
-  randomAttack(){
-
-    while (true){
-      let randX = Math.floor(Math.random() * this.size);
-      let randY = Math.floor(Math.random() * this.size);
-
-      if(this.squaresShot == []){ //if no shots hit yet
-        this.receiveAttack(randX,randY)
-      }
-
-      for(let i = 0; i < this.squaresShot.length;i++){ //check the squares that have been shot and compare to rand 
-        if(this.squaresShot[i].x == randX || this.squaresShot[i].y == randY){
-          break
-        }else{
-          this.receiveAttack(randX,randY)
-        }
-
-      }
-
+  randomAttack() {
+    if (this.squaresShot.length === this.size * this.size) {
+      return; // All squares have been shot
     }
-
+  
+    let randX, randY;
+    do {
+      randX = Math.floor(Math.random() * this.size);
+      randY = Math.floor(Math.random() * this.size);
+    } while (this.isSquareAlreadyShot(randX, randY));
+  
+    this.receiveAttack(randX, randY);
   }
+  
+  isSquareAlreadyShot(x, y) {
+    for (let i = 0; i < this.squaresShot.length; i++) {
+      if (this.squaresShot[i].x === x && this.squaresShot[i].y === y) {
+        return true; // Square has already been shot
+      }
+    }
+    return false; // Square has not been shot
+  }
+  
+  
+
+
+  checkGameOver() {
+    for (let y = 0; y < this.size; y++) {
+      for (let x = 0; x < this.size; x++) {
+        if (this.board[x][y] !== false && this.board[x][y] !== 'hit' && this.board[x][y] !== 'missed') {
+          return false; // A non-empty cell that is not a hit or missed is a ship
+        }
+      }
+    }
+    return true; // No remaining ships found, game is over
+  }
+  
 
   clearDOMboard(board){
     while (board.firstChild) {
@@ -125,7 +152,7 @@ export default class Gameboard {
     }
   }
 
-  loadDOMboard(container){
+  loadDOMboard(container,showShip){
     for(let y = 0; y < this.size; y++){
       for(let x = 0; x < this.size; x++){
         // load different pictures depending on the status of the cell
@@ -136,18 +163,54 @@ export default class Gameboard {
           cell.className = 'cell-missed';
         } else if(this.board[x][y] === 'hit'){
           cell.className = 'cell-hit';
-        } else {
+        } else if(this.board[x][y] === false){
           cell.className = 'cell';
+        }else{
+          if(showShip == true){
+            cell.className = 'cell-ship'
+          }else{
+            cell.className = 'cell';
+          }
         }
-        console.log(cell);
       }
     }
   }
 
-  cellAction(){
-    
-    this.receiveAttack()
+  giveBoardCellsEvent(DOMboard,enemyBoard,enemyDOMboard) { //main DOM loop
+    for (let y = 0; y < this.size; y++) {
+      for (let x = 0; x < this.size; x++) {
+        const cellIndex = y * this.size + x; // Calculate the index of the cell
+        const cell = DOMboard.children[cellIndex];
+
+        // 
+  
+        if (!cell.classList.contains('cell-hit') && !cell.classList.contains('cell-missed')) {
+          cell.addEventListener('click', () => {
+            this.receiveAttack(x, y); // Trigger the attack at the specific coordinates
+            this.clearDOMboard(DOMboard);
+            this.loadDOMboard(DOMboard, false); //refresh board to show hit
+            
+             // give same event to new made cells
+            // computer attacks enemyboard\
+            enemyBoard.randomAttack() 
+            enemyBoard.clearDOMboard(enemyDOMboard)
+            enemyBoard.loadDOMboard(enemyDOMboard,true)
+            
+            if(this.checkGameOver() || enemyBoard.checkGameOver()){
+              console.log('gameover')
+            }
+            
+
+            this.giveBoardCellsEvent(DOMboard,enemyBoard,enemyDOMboard);
+
+            
+            // 
+          });
+        }
+      }
+    }
   }
+  
   
 }
 

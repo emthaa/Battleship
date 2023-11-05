@@ -1,4 +1,4 @@
-const Gameboard = require('./gameboard.js')
+const Gameboard = require('../factories/gameboard.js')
 
 test('gameboard testing',()=>{
   const g = new Gameboard(10)
