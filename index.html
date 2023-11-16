@@ -4,16 +4,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Battleships</title>
+  <title>Battleship</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-  <script src="main.js" type="module" defer></script>
+  <script src="game.js" type="module" defer></script>
+  <div class="header">
+    <div class="header-text"></div>
+  </div>
+
   <div class="boards">
-  <div class='gameboard' id="friendly-gameboard"></div>
-  <div class='gameboard' id="enemy-gameboard"></div>
-</div>
+    <div class="friendly-gameboard-container">
+      <div class='gameboard' id="friendly-gameboard"></div>
+      <div class="boat-selection">
+        <div class="show-boat">
+
+        </div>
+        <div class="show-boat-right">
+          <div>
+            <label for="x-input">X:</label>
+            <input class="input-cords" type="text" pattern="[1-9]" name="x-input" maxlength="1" minlength="1" id="input-x">
+          </div>
+          <div>
+            <label for="y-input">Y:</label>
+            <input class="input-cords" type="text" pattern="[1-9]" name="y-input" maxlength="1" minlength="1" id="input-y">
+          </div>
+          <div>
+            <label for="make-vertical">Vertical:</label>
+          <input class="make-vertical" type="checkbox" name="make-vertical">
+        </div>
+          <button class="input-cords-btn">Place</button>
+          <div class="error-box"></div>
+        </div>
+      </div>
+
+    </div>
+    <div class='gameboard' id="enemy-gameboard"></div>
+  </div>
+  </div>
 </body>
 
 </html>
